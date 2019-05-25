@@ -1,1 +1,1 @@
-# Asp.nCore-MySql-Code-First-Template
+# Asp.net-Core-MySql-Code-First-Template
