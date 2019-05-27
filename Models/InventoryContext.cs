@@ -7,16 +7,24 @@ namespace Inventory.Models
 {
     public class InventoryContext : DbContext
     {
-        public InventoryContext(DbContextOptions<InventoryContext> options)
-    : base(options)
+         private readonly IConfiguration  _configuration;
+
+        public InventoryContext(IConfiguration  configuration)
         {
-           // Database.Migrate();
+            _configuration = configuration;
         }
+    //     public InventoryContext(DbContextOptions<InventoryContext> options)
+    // : base(options)
+    //     {
+    //        // Database.Migrate();
+    //     }
         public  DbSet<Goods> Goods { get; set; }
         public  DbSet<Store> Store { get; set; }
+        public  DbSet<House> House { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;database=inventory;user=root;password=root");
+           // optionsBuilder.UseMySQL("server=localhost;database=inventory4;user=root;password=root;TreatTinyAsBoolean=false");
+            optionsBuilder.UseMySQL(_configuration["ConnectionStrings:DefaultConnectionString"]);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,9 +35,11 @@ namespace Inventory.Models
             {
                 entity.HasKey(e => e.ID);
                 entity.Property(e => e.Name).IsRequired();
-                entity.HasOne(e=>e.Store)
-                .WithMany(p=>p.Goodses)
-                .HasForeignKey(d=>d.StoreId);
+                // entity.HasOne(e=>e.Store)
+                // .WithMany(p=>p.Goodses)
+                // .HasForeignKey(d=>d.StoreId);
+        
+                
             });
 
             //   modelBuilder.Entity<Book>(entity =>
@@ -52,7 +62,8 @@ namespace Inventory.Models
             var builder = new DbContextOptionsBuilder<InventoryContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnectionString");
             builder.UseMySQL(connectionString);
-            return new InventoryContext(builder.Options);
+           // return new InventoryContext(builder.Options);
+            return new InventoryContext(configuration);
         }
     }
 

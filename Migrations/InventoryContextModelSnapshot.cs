@@ -21,7 +21,15 @@ namespace Inventory.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("BuyDate");
+
+                    b.Property<string>("BuyerName");
+
                     b.Property<int>("Count");
+
+                    b.Property<string>("GiftedFrom");
+
+                    b.Property<int?>("HouseId");
 
                     b.Property<DateTime>("ModifyDate");
 
@@ -32,13 +40,39 @@ namespace Inventory.Migrations
 
                     b.Property<int>("ReciveType");
 
-                    b.Property<int>("StoreId");
+                    b.Property<int?>("RegisterNumber");
+
+                    b.Property<int?>("StoreId");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("HouseId");
 
                     b.HasIndex("StoreId");
 
                     b.ToTable("Goods");
+                });
+
+            modelBuilder.Entity("Inventory.Models.House", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal?>("Area");
+
+                    b.Property<string>("DocumentSituation");
+
+                    b.Property<string>("EarthSituation");
+
+                    b.Property<string>("HeadName");
+
+                    b.Property<int>("HouseSituation");
+
+                    b.Property<int>("HouseType");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("House");
                 });
 
             modelBuilder.Entity("Inventory.Models.Store", b =>
@@ -59,10 +93,13 @@ namespace Inventory.Migrations
 
             modelBuilder.Entity("Inventory.Models.Goods", b =>
                 {
+                    b.HasOne("Inventory.Models.House", "House")
+                        .WithMany("Goodses")
+                        .HasForeignKey("HouseId");
+
                     b.HasOne("Inventory.Models.Store", "Store")
                         .WithMany("Goodses")
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("StoreId");
                 });
 #pragma warning restore 612, 618
         }
